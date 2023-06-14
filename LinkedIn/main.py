@@ -8,6 +8,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 import time
 import re
 import json
+from urllib.parse import quote
 
 
 class EasyApplyLinkedin:
@@ -40,18 +41,11 @@ class EasyApplyLinkedin:
         """This function goes to the 'Jobs' section a looks for all the jobs that matches the keywords and location"""
 
         # go to Jobs
-        self.driver.get("https://www.linkedin.com/jobs")
+        link_path = f'https://www.linkedin.com/jobs/search/?currentJobId=3629182803&geoId=101620260&keywords={quote(self.keywords)}&location={self.location}&refresh=true'
+        self.driver.get(link_path)
+        button = self.driver.find_element(By.CSS_SELECTOR, "button[aria-label='Easy Apply filter.']")
+        button.click()
 
-        # search based on keywords and location and hit enter
-        search_keywords = self.driver.find_element(By.ID,
-                                                   ".jobs-search-box-keyword-id-ember861")
-        search_keywords.clear()
-        search_keywords.send_keys(self.keywords)
-        search_location = self.driver.find_element(By.CSS_SELECTOR,
-                                                   ".jobs-search-box__text-input[aria-label='Search location']")
-        search_location.clear()
-        search_location.send_keys(self.location,Keys.ENTER)
-        search_location.send_keys(Keys.RETURN)
 
     def filter(self):
         """This function filters all the job results by 'Easy Apply'"""
